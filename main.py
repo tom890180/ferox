@@ -1,29 +1,35 @@
-import cv2
-import datetime
-from Camera import Camera
-from DetectMotion import DetectMotion
+import logging
+from MotionDetector import MotionDetector
+from FeroxListener import FeroxListener
+from FeroxBot import FeroxBot
+from Config import Config
+from MongoDB import DB
+import threading
 
-cam = Camera()
 
-folder = "images/"
-extension = ".jpg"
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-while True:
-    time_string = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-    print(time_string)
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
-    name = '%s' % time_string
-    img1 = cam.Capture()
-    img2 = cam.Capture()
+cfg = Config()
 
-    dm = DetectMotion(img1, img2)
+db = DB(cfg.get()["MongoDB"]["URL"])
 
-    (motion_found, img1_1, img2_1, contourCount, img2_processed, nonZero) = dm.detect_motion()
+logger.info("Started Ferox")
 
-    print(contourCount)
+def listen(token, db, logger):
+    FeroxListener(token, db, logger).start_polling()
 
-    if not motion_found:
-        continue
+def bot(token, path, db, logger):
+    FeroxBot(token, path, db, logger).start()
 
-    cv2.imwrite('%s%s_c%s_01%s' % (folder, name, nonZero, extension), img1_1)
-    cv2.imwrite('%s%s_c%s_02%s' % (folder, name, nonZero, extension), img2_1)
+def motiondetector(folder, extension, logger):
+    MotionDetector(folder, extension, logger).start()
+
+token = cfg.get()["Telegram"]["Token"]
+
+threading.Thread(target=bot, args=(token, cfg.get()["FeroxBot"]["Path"], db, logger)).start()
+threading.Thread(target=motiondetector, args=(cfg.get()["MotionDetector"]["Folder"], cfg.get()["MotionDetector"]["Extension"], logger)).start()
+

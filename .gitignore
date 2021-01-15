@@ -1,2 +1,4 @@
 images/*
+conf.yml
 __pycache__
+old/*
