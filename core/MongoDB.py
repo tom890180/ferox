@@ -1,8 +1,10 @@
 import pymongo
+from core.Singleton import Singleton
+from core.Config import Config
 
-class DB:
-    def __init__(self, url):
-        self.client = pymongo.MongoClient(url)
+class DB(Singleton):
+    def __init__(self):
+        self.client = pymongo.MongoClient(Config().get()['MongoDB']['URL'])
 
         if "ferox" not in self.client.list_database_names():
             raise Exception("database ferox not found")

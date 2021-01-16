@@ -1,45 +1,31 @@
 import telegram
-import sys
-from watchdog.observers import Observer
-from watchdog.events import LoggingEventHandler
-from watchdog.events import PatternMatchingEventHandler
+from core.Singleton import Singleton
 import time
+from core.Config import Config
+from core.MongoDB import DB
+from core.Logger import Logger
+import os
 
-class FeroxBot(PatternMatchingEventHandler):
-    def __init__(self, token, path, db, logger):
-        self.bot = telegram.Bot(token)
-        self.db = db
-        self.logger = logger
 
-        event_handler = LoggingEventHandler()
+class FeroxBot(Singleton):
 
-        event_handler.on_created = self.on_created
-
-        self.observer = Observer()
-        self.observer.schedule(event_handler, path, recursive=False)
+    def __init__(self):
+        self.bot = telegram.Bot(Config().get()["Telegram"]["Token"])
 
     def sendMessageToAll(self):
-        chats = list(self.db.chats.find({}))
+        chats = list(DB().chats.find({}))
 
         for chat in chats:
             self.bot.sendMessage(chat["chat_id"], "sup")
 
+        Logger().logger.info("sendMessageToAll()")
+
     def sendImageToAll(self, path):
-        chats = list(self.db.chats.find({}))
+        chats = list(DB().chats.find({}))
 
         for chat in chats:
-            self.bot.send_photo(chat["chat_id"], photo=open(path, 'rb'))
+            self.bot.send_photo(chat["chat_id"], open(path, 'rb'))
+            
+        Logger().logger.info("sendImageToAll()")
 
-    def start(self):
-        self.observer.start()
-        try:
-            while True:
-                # Set the thread sleep time
-                time.sleep(1)
-        except KeyboardInterrupt:
-            self.observer.stop()
-            self.observer.join()
-
-    def on_created(self,event):
-        self.logger("File created")
-        self.sendImageToAll(event.src_path)
+        os.remove(path)

@@ -22,9 +22,9 @@ class Camera:
 
         # day
         # self.camera.framerate = 4.5
-        # self.camera.shutter_speed = 10000
+        # self.camera.shutter_speed = 500000
         # self.camera.iso = 200
-        # self.camera.exposure_mode = "off"
+        # self.camera.exposure_mode = "auto"
 
     
     def Capture(self):

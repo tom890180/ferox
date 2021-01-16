@@ -1,7 +1,8 @@
+from core.Singleton import Singleton
 import yaml
 
 
-class Config:
+class Config(Singleton):
     def __init__(self):
         self.cfg = {}
 
