@@ -28,4 +28,4 @@ class FeroxBot(Singleton):
             
         Logger().logger.info("sendImageToAll()")
 
-        os.remove(path)
+        #os.remove(path)
