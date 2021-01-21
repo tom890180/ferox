@@ -2,7 +2,7 @@ import pymongo
 from core.Singleton import Singleton
 from core.Config import Config
 
-class DB(Singleton):
+class DB(metaclass=Singleton):
     def __init__(self):
         self.client = pymongo.MongoClient(Config().get()['MongoDB']['URL'])
 

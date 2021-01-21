@@ -1,13 +1,12 @@
 import telegram
 from core.Singleton import Singleton
-import time
 from core.Config import Config
 from core.MongoDB import DB
 from core.Logger import Logger
 import os
 
 
-class FeroxBot(Singleton):
+class FeroxBot(metaclass=Singleton):
 
     def __init__(self):
         self.bot = telegram.Bot(Config().get()["Telegram"]["Token"])
@@ -28,4 +27,9 @@ class FeroxBot(Singleton):
             
         Logger().logger.info("sendImageToAll()")
 
-        #os.remove(path)
+        os.remove(path)
+
+    def sendImage(self, path, chat_id):
+        self.bot.send_photo(chat_id, open(path, 'rb'))
+        Logger().logger.info("sendImageToAll()")
+        os.remove(path)

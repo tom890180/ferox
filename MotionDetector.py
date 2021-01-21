@@ -5,11 +5,13 @@ from DetectMotion import DetectMotion
 from core.Logger import Logger
 from core.Config import Config
 from FeroxBot import FeroxBot
+import time
 
 class MotionDetector:
-    def __init__(self):
+    def __init__(self, handler):
         self.folder = Config().get()["MotionDetector"]["Folder"]
         self.extension = Config().get()["MotionDetector"]["Extension"]
+        self.handler = handler
 
         self.cam = Camera()
         
@@ -17,12 +19,21 @@ class MotionDetector:
         Logger().logger.info("MotionDetector started")
 
         while True:
+            if self.handler.stop: break
+
             time_string = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
             Logger().logger.info("Image taken")
 
             name = '%s' % time_string
             img1 = self.cam.Capture()
             img2 = self.cam.Capture()
+
+            if(self.handler.sendLatest):
+                self.handler.sendLatest = False
+
+                path = '%s%s_c%s_02%s' % (self.folder, name, nonZero, self.extension)
+                cv2.imwrite(path, img1)
+                FeroxBot().sendImageToAll(path)
 
             dm = DetectMotion(img1, img2)
 
@@ -39,5 +50,4 @@ class MotionDetector:
             cv2.imwrite(path, img2_1)
 
             FeroxBot().sendImageToAll(path)
-
 

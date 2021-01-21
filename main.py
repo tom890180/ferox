@@ -1,17 +1,16 @@
-from MotionDetector import MotionDetector
-from FeroxListener import FeroxListener
-from core.Logger import Logger
-import threading
+# from MotionDetector import MotionDetector
+# from FeroxListener import FeroxListener
+# from core.Logger import Logger
+# import threading
+# from MotionDetectorThreadHandler import MotionDetectorThreadHandler
 
-Logger().logger.info("Started Ferox")
+# Logger().logger.info("Started Ferox")
 
-def listen():
-    FeroxListener().start_polling()
+# def listen():
+#     FeroxListener().start_polling()
 
+# threading.Thread(target=listen, args=()).start()
+import vcgencmd
+CPUc=vcgencmd.measure_temp()
 
-def motiondetector():
-    MotionDetector().start()
-
-threading.Thread(target=listen, args=()).start()
-threading.Thread(target=motiondetector, args=()).start()
-
+print(CPUc)

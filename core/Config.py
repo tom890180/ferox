@@ -2,7 +2,7 @@ from core.Singleton import Singleton
 import yaml
 
 
-class Config(Singleton):
+class Config(metaclass=Singleton):
     def __init__(self):
         self.cfg = {}
 

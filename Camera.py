@@ -1,10 +1,15 @@
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 import time
+from core.Singleton import Singleton
+from core.Logger import Logger
+import cv2
+from FeroxBot import FeroxBot
+from core.Config import Config
 
 # https://picamera.readthedocs.io/en/release-1.10/api_camera.html
 
-class Camera:
+class Camera(metaclass=Singleton):
     def __init__(self):
         self.camera = PiCamera()
 
@@ -37,3 +42,11 @@ class Camera:
         time.sleep(1)
 
         self.camera.capture(filename)
+
+    def sendLatest(self, chat_id):
+        latest = self.Capture()
+
+        path = '%s%s_c%s_02%s' % (Config().get()["MotionDetector"]["Folder"], "latest", 0, Config().get()["MotionDetector"]["Extension"])
+        Logger().logger.info(path)
+        cv2.imwrite(path, latest)
+        FeroxBot().sendImage(path, chat_id)
