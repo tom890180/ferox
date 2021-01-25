@@ -1,6 +1,6 @@
 # Ferox
 
-python3 -m pip install python-telegram-bot pymongo dnspython pyyaml picamera
+python3 -m pip install python-telegram-bot pymongo dnspython pyyaml picamera requests python-dateutil
 
 apt-get install  libopenexr-dev libilmbase-dev  libgstreamer1.0-dev
 
@@ -13,7 +13,9 @@ sudo apt-get install -y libatlas-base-dev libhdf5-dev libhdf5-serial-dev libatla
 Create a conf.yml 
 
 
-# Links
+# Links, Dependencies
+
+https://sunrise-sunset.org/api
 
 https://cloud.mongodb.com/
 

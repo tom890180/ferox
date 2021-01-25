@@ -22,7 +22,6 @@ class MotionDetector:
             if self.handler.stop: break
 
             time_string = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-            Logger().logger.info("Image taken")
 
             name = '%s' % time_string
             img1 = self.cam.Capture()

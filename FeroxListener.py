@@ -4,6 +4,7 @@ from core.Config import Config
 from core.MongoDB import DB
 from core.Logger import Logger
 import MotionDetectorThreadHandler
+from SunAPI import SunAPI
 
 class FeroxListener:
     def __init__(self):
@@ -18,12 +19,21 @@ class FeroxListener:
         dispatcher.add_handler(CommandHandler('status', self.status))
         dispatcher.add_handler(CommandHandler('latest', self.latest))
 
+        dispatcher.add_handler(CommandHandler('sun', self.sun))
+        dispatcher.add_handler(CommandHandler('day', self.day))
+
         dispatcher.add_handler(CommandHandler('help', self.help))
 
 
     def start_polling(self):
         Logger().logger.info("Started polling")
         self.updater.start_polling()
+
+    def sun(self, update, context):
+        context.bot.send_message(chat_id=update.effective_chat.id, text=SunAPI().data)
+
+    def day(self, update, context):
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Is day: %s" % SunAPI().isDay())
 
     def start(self, update, context):
         MotionDetectorThreadHandler.MotionDetectorThreadHandler().startThread()
@@ -68,5 +78,7 @@ class FeroxListener:
         "/start: Start detecting motion "       + "\n" +
         "/stop: Stop detecting motion "         + "\n" +
         "/latest: Get latest image     "        + "\n" +
+        "/sun: Get sun data     "               + "\n" +
+        "/day: Check if day or night     "      + "\n" +
         "" +
         "")

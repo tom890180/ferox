@@ -4,7 +4,7 @@ from core.Logger import Logger
 import threading
 from MotionDetectorThreadHandler import MotionDetectorThreadHandler
 
-Logger().logger.info("Started Ferox")
+Logger().logger.info("======== Started Ferox ========")
 
 def listen():
     FeroxListener().start_polling()
