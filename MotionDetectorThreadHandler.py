@@ -12,9 +12,15 @@ class MotionDetectorThreadHandler(metaclass=Singleton):
         self.thread = threading.Thread(target=self.motiondetector, args=())
         self.stop = False
         self.sendLatest = False
+        self.ThreadHasBeenRun = False
 
     def startThread(self):
+        if self.ThreadHasBeenRun:
+            self.thread = threading.Thread(target=self.motiondetector, args=())
+            self.stop = False
+
         if not self.thread.is_alive():
+            self.ThreadHasBeenRun = True
             self.thread.start()
 
     def is_alive(self):

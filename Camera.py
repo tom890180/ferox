@@ -22,8 +22,8 @@ class Camera(metaclass=Singleton):
 
     def setUp(self):
         if SunAPI().isDay():
-            self.camera.framerate = 4.5
-            self.camera.shutter_speed = 500000
+            self.camera.framerate = 2.5
+            self.camera.shutter_speed = 3500
             self.camera.iso = 200
             self.camera.exposure_mode = "auto"
         else:
@@ -31,11 +31,12 @@ class Camera(metaclass=Singleton):
             self.camera.shutter_speed = 500000
             self.camera.iso = 800
             self.camera.exposure_mode = "night"
+
+        self.camera.start_preview()
+        time.sleep(1)
     
     def Capture(self):
         self.setUp()
-        self.camera.start_preview()
-        time.sleep(1)
 
         raw = PiRGBArray(self.camera)
         self.camera.capture(raw, format="bgr")
@@ -43,8 +44,6 @@ class Camera(metaclass=Singleton):
 
     def CaptureToFile(self, filename):
         self.setUp()
-        self.camera.start_preview()
-        time.sleep(1)
 
         self.camera.capture(filename)
 

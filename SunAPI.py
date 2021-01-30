@@ -24,13 +24,12 @@ class SunAPI(metaclass=Singleton):
 
     # compare if result contains todays' sunrise
     def valid(self):
-        if not self.data:
-            return False
         return self.cacheKey == date.today().strftime("%Y-%m-%d")
 
     def fetch(self):
         if self.valid(): return 1
 
+        Logger().logger.info("SunAPI REQ: %s" % self.url)
         r = requests.get(url=self.url)
 
         self.data = r.json()['results']
@@ -41,6 +40,7 @@ class SunAPI(metaclass=Singleton):
         return 1
 
     def isDay(self):
+        self.fetch()
         now = datetime.now(timezone.utc).astimezone(tz.tzlocal())
         return self.UTCDateToLocal(self.data['sunrise']) < now and self.UTCDateToLocal(self.data['sunset']) > now
 

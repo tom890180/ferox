@@ -21,6 +21,7 @@ class FeroxListener:
 
         dispatcher.add_handler(CommandHandler('sun', self.sun))
         dispatcher.add_handler(CommandHandler('day', self.day))
+        dispatcher.add_handler(CommandHandler('cache', self.cache))
 
         dispatcher.add_handler(CommandHandler('help', self.help))
 
@@ -35,7 +36,11 @@ class FeroxListener:
     def day(self, update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text="Is day: %s" % SunAPI().isDay())
 
+    def cache(self, update, context):
+        context.bot.send_message(chat_id=update.effective_chat.id, text="CACHE KEY: %s" % SunAPI().cacheKey)
+
     def start(self, update, context):
+        self.subscribe(update, context, False)
         MotionDetectorThreadHandler.MotionDetectorThreadHandler().startThread()
         context.bot.send_message(chat_id=update.effective_chat.id, text="Started motion detector")
 
@@ -53,18 +58,20 @@ class FeroxListener:
         else: 
             context.bot.send_message(chat_id=update.effective_chat.id, text="Motion detector is not running")
 
-    def subscribe(self, update, context):
+    def subscribe(self, update, context, returnMessage=True):
         obj = DB().chats.find_one({"chat_id": update.effective_chat.id})
 
         if obj:
-            context.bot.send_message(chat_id=update.effective_chat.id, text="You are already subscribed to me.")
+            if returnMessage:
+                context.bot.send_message(chat_id=update.effective_chat.id, text="You are already subscribed to me.")
             return
 
         DB().chats.insert_one({
             "chat_id": update.effective_chat.id
         })
 
-        context.bot.send_message(chat_id=update.effective_chat.id, text="You have subscribed to me!")
+        if returnMessage:
+            context.bot.send_message(chat_id=update.effective_chat.id, text="You have subscribed to me!")
 
     def unsubscribe(self, update, context):
         DB().chats.find_one_and_delete({'chat_id': update.effective_chat.id})
