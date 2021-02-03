@@ -29,7 +29,7 @@ class FeroxListener:
     def update(self, update, context):
         import subprocess
         import sys
-        subprocess.Popen("sleep 5 && sh %s &> %s" % (Config().get()['Logger']['Path'], Config().get()['Logger']['Path']), shell=True)
+        subprocess.Popen("sleep 5 && sh %s &> %s" % (Config().get()['Updater']['Path'], Config().get()['Logger']['Path']), shell=True)
         sys.exit(0)
 
     def start_polling(self):
