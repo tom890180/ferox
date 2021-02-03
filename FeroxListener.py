@@ -24,7 +24,13 @@ class FeroxListener:
         dispatcher.add_handler(CommandHandler('cache', self.cache))
 
         dispatcher.add_handler(CommandHandler('help', self.help))
+        dispatcher.add_handler(CommandHandler('update', self.update))
 
+    def update(self):
+        import subprocess
+        import sys
+        subprocess.Popen("sleep 5 && sh /home/tom/feinstaller.sh", stdout=subprocess.PIPE, shell=True, stderr=subprocess.STDOUT)
+        sys.exit(0)
 
     def start_polling(self):
         Logger().logger.info("Started polling")
