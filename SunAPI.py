@@ -3,9 +3,8 @@ from core.Singleton import Singleton
 from core.Config import Config
 import urllib.request
 import json
-from datetime import date
 import requests
-from datetime import datetime,timezone
+from datetime import datetime,timezone,date
 from dateutil import tz
 from core.Logger import Logger
 
@@ -16,7 +15,7 @@ class SunAPI(metaclass=Singleton):
         self.lng = Config().get()['Position']['Longitude']
         self.url = "https://api.sunrise-sunset.org/json?lat=%s&lng=%s&date=%s&formatted=0" % (self.lat,
                                                                                              self.lng,
-                                                                                             date.today().strftime("%Y-%m-%d")
+                                                                                             self.getTodayAsUTC().strftime("%Y-%m-%d")
                                                                                              )
         self.data = None
         self.cacheKey = None
@@ -24,7 +23,7 @@ class SunAPI(metaclass=Singleton):
 
     # compare if result contains todays' sunrise
     def valid(self):
-        return self.cacheKey == date.today().strftime("%Y-%m-%d")
+        return self.cacheKey == self.getTodayAsUTC().strftime("%Y-%m-%d")
 
     def fetch(self):
         if self.valid(): return 1
@@ -33,7 +32,7 @@ class SunAPI(metaclass=Singleton):
         r = requests.get(url=self.url)
 
         self.data = r.json()['results']
-        self.cacheKey = date.today().strftime("%Y-%m-%d")
+        self.cacheKey = self.getTodayAsUTC().strftime("%Y-%m-%d")
 
         Logger().logger.info("SunAPI: %s" % self.data)
 
@@ -60,3 +59,6 @@ class SunAPI(metaclass=Singleton):
         central = utc.astimezone(to_zone)
 
         return central
+
+    def getTodayAsUTC(self):
+        return datetime.now(timezone.utc).astimezone(tz.tzlocal())
