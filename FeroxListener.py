@@ -26,7 +26,7 @@ class FeroxListener:
         dispatcher.add_handler(CommandHandler('help', self.help))
         dispatcher.add_handler(CommandHandler('update', self.update))
 
-    def update(self):
+    def update(self, update, context):
         import subprocess
         import sys
         subprocess.Popen("sleep 5 && sh /home/tom/feinstaller.sh", stdout=subprocess.PIPE, shell=True, stderr=subprocess.STDOUT)
