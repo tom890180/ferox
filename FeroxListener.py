@@ -93,5 +93,6 @@ class FeroxListener:
         "/latest: Get latest image     "        + "\n" +
         "/sun: Get sun data     "               + "\n" +
         "/day: Check if day or night     "      + "\n" +
+	"/update: Update self" 			+ "\n" +
         "" +
         "")
