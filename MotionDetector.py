@@ -27,8 +27,6 @@ class MotionDetector:
             img1 = self.cam.Capture()
             img2 = self.cam.Capture()
 
-            Logger().logger.info("img")
-
             if(self.handler.sendLatest):
                 self.handler.sendLatest = False
 
