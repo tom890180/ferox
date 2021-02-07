@@ -37,6 +37,7 @@ class FeroxListener:
         self.updater.start_polling()
 
     def sun(self, update, context):
+        SunAPI().fetch()
         context.bot.send_message(chat_id=update.effective_chat.id, text=SunAPI().data)
 
     def day(self, update, context):

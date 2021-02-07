@@ -13,26 +13,25 @@ class SunAPI(metaclass=Singleton):
     def __init__(self):
         self.lat = Config().get()['Position']['Latitude']
         self.lng = Config().get()['Position']['Longitude']
-        self.url = "https://api.sunrise-sunset.org/json?lat=%s&lng=%s&date=%s&formatted=0" % (self.lat,
-                                                                                             self.lng,
-                                                                                             self.getTodayAsUTC().strftime("%Y-%m-%d")
-                                                                                             )
+        self.url = "https://api.sunrise-sunset.org/json?lat=%s&lng=%s&date=%s&formatted=0"
         self.data = None
         self.cacheKey = None
         self.fetch()
 
     # compare if result contains todays' sunrise
     def valid(self):
-        return self.cacheKey == self.getTodayAsUTC().strftime("%Y-%m-%d")
+        return self.cacheKey == datetime.utcnow().strftime("%Y-%m-%d")
 
     def fetch(self):
         if self.valid(): return 1
 
-        Logger().logger.info("SunAPI REQ: %s" % self.url)
-        r = requests.get(url=self.url)
+        url = self.url % (self.lat, self.lng, datetime.utcnow().strftime("%Y-%m-%d"))
+
+        Logger().logger.info("SunAPI REQ: %s" % url)
+        r = requests.get(url=url)
 
         self.data = r.json()['results']
-        self.cacheKey = self.getTodayAsUTC().strftime("%Y-%m-%d")
+        self.cacheKey = datetime.utcnow().strftime("%Y-%m-%d")
 
         Logger().logger.info("SunAPI: %s" % self.data)
 
@@ -41,6 +40,7 @@ class SunAPI(metaclass=Singleton):
     def isDay(self):
         self.fetch()
         now = datetime.now(timezone.utc).astimezone(tz.tzlocal())
+        Logger().logger.info("%s < %s and %s > %s" % (self.UTCDateToLocal(self.data['sunrise']), now, self.UTCDateToLocal(self.data['sunset']), now))
         return self.UTCDateToLocal(self.data['sunrise']) < now and self.UTCDateToLocal(self.data['sunset']) > now
 
     def isNight(self):
@@ -52,13 +52,9 @@ class SunAPI(metaclass=Singleton):
         from_zone = tz.tzutc()
         to_zone = tz.tzlocal()
 
-        utc = datetime.utcnow()
         utc = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S+00:00')
 
         utc = utc.replace(tzinfo=from_zone)
         central = utc.astimezone(to_zone)
 
         return central
-
-    def getTodayAsUTC(self):
-        return datetime.now(timezone.utc).astimezone(tz.tzlocal())
