@@ -22,3 +22,10 @@ https://cloud.mongodb.com/
 https://python-telegram-bot.readthedocs.io
 
 https://core.telegram.org/
+
+# Boot
+
+/etc/rc.local
+```
+su tom -c '/usr/bin/python3.7 /share/wlc/main.py &'
+```
