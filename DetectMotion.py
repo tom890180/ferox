@@ -38,8 +38,8 @@ class DetectMotion:
         return motion_found, self.img1, self.img2, contourCount, img2_processed, nonZero
 
     def preliminary_image_process(self, image):
-        image = cv2.rectangle(image, (420, 100), (570, 220), (0,0,0), -1)
-        image = cv2.rectangle(image, (10, 280), (100, 400), (0,0,0), -1)
+        #image = cv2.rectangle(image, (420, 100), (570, 220), (0,0,0), -1)
+        #image = cv2.rectangle(image, (10, 280), (100, 400), (0,0,0), -1)
 
         grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         gaussian_frame = cv2.GaussianBlur(grey, (21, 21), 0)
