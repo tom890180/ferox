@@ -16,7 +16,7 @@ class Camera(metaclass=Singleton):
 
         self.camera.resolution = (1536, 1088)
         self.camera.hflip = True
-        self.camera.vflip = True
+        self.camera.vflip = False
         self.camera.sharpness = 100
         self.camera.saturation = -100
 
