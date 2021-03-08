@@ -23,7 +23,7 @@ class Camera(metaclass=Singleton):
     def setUp(self):
         if SunAPI().isDay():
             self.camera.framerate = 2.5
-            self.camera.shutter_speed = 2000
+            self.camera.shutter_speed = 800
             self.camera.iso = 200
             self.camera.exposure_mode = "auto"
         else:
