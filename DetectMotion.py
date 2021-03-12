@@ -22,7 +22,7 @@ class DetectMotion:
         nonZero = cv2.countNonZero(dilate_image)
 
         for contour in contours:
-            if cv2.contourArea(contour) < 20: continue
+            if cv2.contourArea(contour) < 50: continue
 
             contourCount = contourCount + 1
 
