@@ -27,10 +27,14 @@ class Camera(metaclass=Singleton):
             self.camera.iso = 100
             self.camera.exposure_mode = "auto"
         else:
-            self.camera.framerate = 4.5
-            self.camera.shutter_speed = 500000
-            self.camera.iso = 800
-            self.camera.exposure_mode = "night"
+            #self.camera.framerate = 4.5
+            #self.camera.shutter_speed = 500000
+            #self.camera.iso = 800
+            #self.camera.exposure_mode = "night"
+            self.camera.framerate = 2.5
+            self.camera.shutter_speed = 600
+            self.camera.iso = 100
+            self.camera.exposure_mode = "auto"
 
         self.camera.start_preview()
         time.sleep(1)
